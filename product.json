@@ -1,0 +1,18 @@
+{
+  "product": {
+    "name": "Paku",
+    "what": "AI calorie tracker: take a photo of your meal, get calories and macros in seconds",
+    "audience": "women 18-30 trying to lose weight without obsessive tracking",
+    "link": "https://apps.apple.com/app/paku"
+  },
+  "niche_phrases": ["calorie tracker", "calorie tracking app", "tracking my calories", "calorie counting app",
+                    "track your calories", "calorie deficit"],
+  "min_views": 30000,
+  "since": "2026-05-01",
+  "research_limit": 30,
+  "fork_id": "cnt_5d173a71931cf347a2c66d5d2ee3",
+  "always_hashtags": ["HackTheFeed"],
+  "end_card": "assets/end_card.jpg",
+  "offline_stills": "assets/*.jpg",
+  "product_stills": "assets/product_*.jpg"
+}

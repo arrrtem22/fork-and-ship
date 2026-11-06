@@ -1,0 +1,14 @@
+.env
+__pycache__/
+assets/
+data/render_*/
+data/check.jpg
+data/shot.png
+data/video_1.mp4
+data/*.mp4
+data/*.jpg
+data/*.log
+data/fork_*/
+data/*.webp
+data/*.mp3
+.DS_Store

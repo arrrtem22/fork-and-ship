@@ -1,0 +1,56 @@
+{
+ "created_at": 1794006800,
+ "chosen_format": "fork of @rachelscookin (641K views, 24.1x followers)",
+ "why": "https://www.tiktok.com/@rachelscookin/video/7680595014258298142: highest views per follower with a clear shot/text structure.",
+ "source": {
+  "url": "https://www.tiktok.com/@rachelscookin/video/7680595014258298142",
+  "handle": "rachelscookin",
+  "views": 641000,
+  "followers": 26600,
+  "views_per_follower": 24.1,
+  "duration_s": 7
+ },
+ "experiment": {
+  "what": "hook",
+  "original": "a meal I could eat 5 days a week in a calorie deficit",
+  "variant": "the 20-min dinner keeping me in a deficit",
+  "why": "Specific timeframes trigger immediate curiosity and higher retention for busy dieters."
+ },
+ "cta": {
+  "on_screen_text": "track your deficit meals in seconds with paku",
+  "seconds": 2.5
+ },
+ "formats": [],
+ "remake": {
+  "hook_text": "the 20-min dinner keeping me in a deficit",
+  "shots": [
+   {
+    "seconds": 2.0,
+    "prompt": "Slight high-angle vertical shot of a hand pressing a measuring cup of white rice into a clean bowl on a kitchen counter.",
+    "on_screen_text": "the 20-min dinner keeping me in a deficit",
+    "ref": "https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/1_0.60.webp"
+   },
+   {
+    "seconds": 2.2,
+    "prompt": "Angled close-up of metal tongs placing cooked ground beef and sliced red peppers over the rice bowl.",
+    "on_screen_text": "a meal I could eat 5 days a week in a calorie deficit",
+    "ref": "https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/6_2.37.webp"
+   },
+   {
+    "seconds": 2.8,
+    "prompt": "Overhead vertical view of hands using kitchen shears to snip fresh scallions over the plated beef bowl.",
+    "on_screen_text": "a meal I could eat 5 days a week in a calorie deficit",
+    "ref": "https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/10_4.93.webp"
+   }
+  ],
+  "caption": "easy 20-minute beef bowl for your deficit 🥩 recipe in comments",
+  "hashtags": [
+   "caloriedeficit",
+   "highprotein",
+   "dinnerideas",
+   "easyrecipe",
+   "HackTheFeed"
+  ]
+ },
+ "video": "data/fork_1794006800.mp4"
+}
