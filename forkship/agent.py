@@ -196,6 +196,52 @@ def fork() -> str:
     return p["video"]
 
 
+HOOKS_SYSTEM = """You write hook tests for a short video. You get the original's first on-screen line, its stats, and the
+other winners' first lines in the niche (from a video-intelligence API). Return ONE JSON object:
+{"variants": [{"text": str /* <= 9 words, lowercase, same tone as the original */, "why": str /* the bet, citing a winner's data */}]}
+Exactly 3 variants, each a different bet (e.g. time/effort, number/specific, identity/relatable). No emoji, no hype words."""
+
+
+def variants() -> list[dict]:
+    """A/B/C/D on footage already rendered: A keeps the original hook (control), B-D test one new line each.
+
+    Needs no new video generation, so it is cheap and every variant differs only in the first line."""
+    p = _load("plan.json")
+    work = os.path.join(DATA, f"fork_{p['created_at']}")
+    winners = _load("research.json", [])
+    src = p.get("source") or {}
+    shots = p["remake"]["shots"]
+    original = next((s["on_screen_text"] for s in shots[1:] if s.get("on_screen_text")), shots[0]["on_screen_text"])
+    others = [{"first_line": (w.get("first_text_on_screen") or {}).get("text"), "views_per_follower": w.get("views_per_follower")}
+              for w in winners[:12] if w.get("first_text_on_screen")]
+    bets = gmi.chat_json(HOOKS_SYSTEM, json.dumps({"original_hook": original, "original": src, "other_winners": others}, ensure_ascii=False))
+    hooks = [{"text": original, "why": "control: the original's hook, unchanged"}] + bets.get("variants", [])[:3]
+    text_y, size = 0.45, 58
+    clips = [render.shot_clip(os.path.join(work, f"raw_{i}.mp4"), s["on_screen_text"], s["seconds"], os.path.join(work, f"base_{i}.mp4"), work,
+                              y_frac=text_y, size=size) for i, s in enumerate(shots)]
+    copy_s = sum(s["seconds"] for s in shots)
+    cta = dict(p.get("cta") or {})
+    cta["seconds"] = round(max(1.2, copy_s * 0.05 / 0.95), 1)
+    stills = sorted(glob.glob(CONFIG.get("product_stills", "assets/product_*.jpg")))
+    cta_clip = render.shot_clip(stills[0], cta["on_screen_text"], cta["seconds"], os.path.join(work, "cta_short.mp4"), work, y_frac=text_y, size=size)
+    mp3 = os.path.join(DATA, f"music_{p['created_at']}.mp3")
+    out = []
+    for k, h in enumerate(hooks):
+        first = render.shot_clip(os.path.join(work, "raw_0.mp4"), h["text"], shots[0]["seconds"], os.path.join(work, f"hook_{k}.mp4"), work,
+                                 y_frac=text_y, size=size)
+        silent = render.concat([first] + clips[1:] + [cta_clip], os.path.join(work, f"v{k}.mp4"))
+        final = os.path.join(DATA, f"fork_{p['created_at']}_{'ABCD'[k]}.mp4")
+        render.add_music(silent, mp3, final, copy_s + cta["seconds"]) if os.path.exists(mp3) else os.replace(silent, final)
+        out.append({"label": "ABCD"[k], "hook": h["text"], "why": h.get("why", ""), "video": final})
+    p["variants"], p["cta"], p["video"] = out, cta, out[0]["video"]
+    p["split"] = {"copy_s": round(copy_s, 1), "test": "hook line", "cta_s": cta["seconds"]}
+    p["experiment"] = {"what": "hook", "original": original, "variants": hooks[1:]}
+    _save("plan.json", p)
+    for v in out:
+        print(f"{v['label']}: {v['hook']}  ->  {v['video']}")
+    return out
+
+
 def music() -> str:
     """Add a GMI music bed to the current plan's video (for videos rendered before music existed)."""
     p = _load("plan.json")
@@ -238,7 +284,7 @@ def learn() -> list[dict]:
 
 def main() -> None:
     cmd = sys.argv[1] if len(sys.argv) > 1 else "loop"
-    steps = {"research": research, "plan": plan, "render": render_video, "fork": fork, "music": music, "ship": ship, "learn": learn}
+    steps = {"research": research, "plan": plan, "render": render_video, "fork": fork, "music": music, "variants": variants, "ship": ship, "learn": learn}
     if cmd == "loop":
         if os.environ.get("OUTNUMBER_API_KEY"):
             learn()

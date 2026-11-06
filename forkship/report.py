@@ -98,7 +98,7 @@ def build() -> str:
         img = _thumb(ours, mid, f"cmp_{i}.jpg")
         pairs.append(f"""<div class="pair"><div class="lab">SHOT {i + 1} · {s['seconds']}s</div>
 <img src="{s.get('ref')}" title="original"><div class="cap">original</div>
-<img src="{img}" style="margin-top:8px"><div class="cap">ours · “{E(s.get('on_screen_text', ''))}”</div></div>""")
+<img src="{img}" style="margin-top:8px"><div class="cap">ours · “{E(variants[1]['hook'] if i == 0 and len(variants) > 1 else s.get('on_screen_text', ''))}”</div></div>""")
         t += s["seconds"]
     if variants:
         img = _thumb(variants[0]["video"], t + float(cta.get("seconds", 1.2)) / 2, "cmp_cta.jpg")
@@ -107,13 +107,12 @@ def build() -> str:
 <div class="cap">original</div><img src="{img}" style="margin-top:8px"><div class="cap">ours · “{E(cta.get('on_screen_text', ''))}”</div></div>""")
 
     copy_s, cta_s = float(split.get("copy_s") or sum(s["seconds"] for s in shots) or 1), float(cta.get("seconds") or 1.2)
-    hook_s = min(1.0, shots[0]["seconds"]) if shots else 0.5
     total = copy_s + cta_s
-    bar = (f'<div class="split"><div style="flex:{copy_s - hook_s};background:var(--say)">copy · {100 * (copy_s - hook_s) / total:.0f}%</div>'
-           f'<div style="flex:{hook_s};background:var(--show)">test {100 * hook_s / total:.0f}%</div>'
+    bar = (f'<div class="split"><div style="flex:{copy_s};background:var(--say)">copied structure · {100 * copy_s / total:.0f}% of screen time'
+           f'<span style="background:var(--show);border-radius:4px;padding:2px 6px;margin-left:10px">test: only the first text line</span></div>'
            f'<div style="flex:{cta_s};background:var(--acc)">CTA {100 * cta_s / total:.0f}%</div></div>')
 
-    vars_html = "".join(f"""<div class="var"><video src="{os.path.basename(v['video'])}" controls playsinline loop preload="metadata"></video>
+    vars_html = "".join(f"""<div class="var"><video src="{os.path.basename(v['video'])}#t=0.6" controls playsinline loop preload="auto"></video>
 <span class="tag {'ctl' if i == 0 else ''}">{v['label']} · {'CONTROL' if i == 0 else 'TEST'}</span><h3>“{E(v['hook'])}”</h3><p>{E(v.get('why', ''))}</p></div>"""
                         for i, v in enumerate(variants))
 
@@ -152,7 +151,7 @@ def build() -> str:
 <section><div class="eyebrow">The fork</div><h2>Original vs ours, shot by shot</h2>
 <p class="sub">Source: <a class="src" href="{src.get('url', '#')}" target="_blank">@{E(src.get('handle', ''))}</a> · {_fmt(src.get('views'))} views on {_fmt(src.get('followers'))} followers · {src.get('duration_s')}s. Same framing, action and cut length; new hands, plate and kitchen; their text never copied from pixels.</p>
 {bar}
-<div class="legend"><span>copy: shots, timing, on-screen text</span><span>test: the hook line</span><span>CTA: real app screen</span></div>
+<div class="legend"><span>copied: shots, framing, cut timing, on-screen text</span><span>tested: one line of text</span><span>CTA: real app screen, {cta.get('seconds')}s (shortest readable)</span></div>
 <div class="pairs" style="margin-top:18px">{''.join(pairs)}</div></section>
 
 <section><div class="eyebrow">The test</div><h2>{len(variants)} videos, one variable</h2>

@@ -13,3 +13,5 @@ data/*.webp
 data/*.mp3
 .DS_Store
 data/cmp_*.jpg
+fork-and-ship-demo/
+.vercel/

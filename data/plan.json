@@ -13,12 +13,24 @@
  "experiment": {
   "what": "hook",
   "original": "a meal I could eat 5 days a week in a calorie deficit",
-  "variant": "the 20-min dinner keeping me in a deficit",
-  "why": "Specific timeframes trigger immediate curiosity and higher retention for busy dieters."
+  "variants": [
+   {
+    "text": "500 calorie meal i eat 5 days a week",
+    "why": "adds concrete caloric specificity, borrowing from the 31.9 views/follower winner that highlighted sub-500 calorie and macro numbers"
+   },
+   {
+    "text": "lazy calorie deficit meal i eat every week",
+    "why": "bets on low-effort positioning, inspired by the lazy girl meal format scoring 26.7 views/follower"
+   },
+   {
+    "text": "volume eating meal i make 5 days a week",
+    "why": "targets the volume eating concept, which led top-performing deficit content at 31.9 views/follower"
+   }
+  ]
  },
  "cta": {
   "on_screen_text": "track your deficit meals in seconds with paku",
-  "seconds": 2.5
+  "seconds": 1.2
  },
  "formats": [],
  "remake": {
@@ -52,6 +64,37 @@
    "HackTheFeed"
   ]
  },
- "video": "data/fork_1794006800_music.mp4",
- "music_prompt": "upbeat lofi hip hop cooking beat, warm and cozy, 90 bpm"
+ "video": "data/fork_1794006800_A.mp4",
+ "music_prompt": "upbeat lofi hip hop cooking beat, warm and cozy, 90 bpm",
+ "variants": [
+  {
+   "label": "A",
+   "hook": "a meal I could eat 5 days a week in a calorie deficit",
+   "why": "control: the original's hook, unchanged",
+   "video": "data/fork_1794006800_A.mp4"
+  },
+  {
+   "label": "B",
+   "hook": "500 calorie meal i eat 5 days a week",
+   "why": "adds concrete caloric specificity, borrowing from the 31.9 views/follower winner that highlighted sub-500 calorie and macro numbers",
+   "video": "data/fork_1794006800_B.mp4"
+  },
+  {
+   "label": "C",
+   "hook": "lazy calorie deficit meal i eat every week",
+   "why": "bets on low-effort positioning, inspired by the lazy girl meal format scoring 26.7 views/follower",
+   "video": "data/fork_1794006800_C.mp4"
+  },
+  {
+   "label": "D",
+   "hook": "volume eating meal i make 5 days a week",
+   "why": "targets the volume eating concept, which led top-performing deficit content at 31.9 views/follower",
+   "video": "data/fork_1794006800_D.mp4"
+  }
+ ],
+ "split": {
+  "copy_s": 7.0,
+  "test": "hook line",
+  "cta_s": 1.2
+ }
 }

@@ -49,7 +49,7 @@ a.src{color:var(--acc)}footer{margin-top:72px;color:var(--mut);font-size:13px;bo
  <div class="stat"><b>30</b><span>niche videos read by Oriane</span></div>
  <div class="stat"><b>24.1x</b><span>views per follower on the one we forked</span></div>
  <div class="stat"><b>3 shots</b><span>re-shot from the original's frames</span></div>
- <div class="stat"><b>1 hooks</b><span>same footage, so views compare fairly</span></div>
+ <div class="stat"><b>4 hooks</b><span>same footage, so views compare fairly</span></div>
 </div>
 
 <section><div class="eyebrow">How it works</div><h2>One command, five steps</h2><p class="sub">python -m forkship.agent fork</p>
@@ -63,22 +63,25 @@ a.src{color:var(--acc)}footer{margin-top:72px;color:var(--mut);font-size:13px;bo
 
 <section><div class="eyebrow">The fork</div><h2>Original vs ours, shot by shot</h2>
 <p class="sub">Source: <a class="src" href="https://www.tiktok.com/@rachelscookin/video/7680595014258298142" target="_blank">@rachelscookin</a> · 641K views on 27K followers · 7s. Same framing, action and cut length; new hands, plate and kitchen; their text never copied from pixels.</p>
-<div class="split"><div style="flex:6.0;background:var(--say)">copy · 63%</div><div style="flex:1.0;background:var(--show)">test 11%</div><div style="flex:2.5;background:var(--acc)">CTA 26%</div></div>
-<div class="legend"><span>copy: shots, timing, on-screen text</span><span>test: the hook line</span><span>CTA: real app screen</span></div>
+<div class="split"><div style="flex:7.0;background:var(--say)">copied structure · 85% of screen time<span style="background:var(--show);border-radius:4px;padding:2px 6px;margin-left:10px">test: only the first text line</span></div><div style="flex:1.2;background:var(--acc)">CTA 15%</div></div>
+<div class="legend"><span>copied: shots, framing, cut timing, on-screen text</span><span>tested: one line of text</span><span>CTA: real app screen, 1.2s (shortest readable)</span></div>
 <div class="pairs" style="margin-top:18px"><div class="pair"><div class="lab">SHOT 1 · 2.0s</div>
 <img src="https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/1_0.60.webp" title="original"><div class="cap">original</div>
-<img src="cmp_0.jpg" style="margin-top:8px"><div class="cap">ours · “the 20-min dinner keeping me in a deficit”</div></div><div class="pair"><div class="lab">SHOT 2 · 2.2s</div>
+<img src="cmp_0.jpg" style="margin-top:8px"><div class="cap">ours · “500 calorie meal i eat 5 days a week”</div></div><div class="pair"><div class="lab">SHOT 2 · 2.2s</div>
 <img src="https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/6_2.37.webp" title="original"><div class="cap">original</div>
 <img src="cmp_1.jpg" style="margin-top:8px"><div class="cap">ours · “a meal I could eat 5 days a week in a calorie deficit”</div></div><div class="pair"><div class="lab">SHOT 3 · 2.8s</div>
 <img src="https://social-catalog-static.oriane.xyz/oriane-frames/tiktok/7680595014258298142/10_4.93.webp" title="original"><div class="cap">original</div>
-<img src="cmp_2.jpg" style="margin-top:8px"><div class="cap">ours · “a meal I could eat 5 days a week in a calorie deficit”</div></div><div class="pair"><div class="lab">CTA · 2.5s</div>
+<img src="cmp_2.jpg" style="margin-top:8px"><div class="cap">ours · “a meal I could eat 5 days a week in a calorie deficit”</div></div><div class="pair"><div class="lab">CTA · 1.2s</div>
 <div style="aspect-ratio:9/16;border-radius:10px;border:1px dashed var(--line);display:grid;place-items:center;color:var(--mut);font-size:12px">their ending</div>
 <div class="cap">original</div><img src="cmp_cta.jpg" style="margin-top:8px"><div class="cap">ours · “track your deficit meals in seconds with paku”</div></div></div></section>
 
-<section><div class="eyebrow">The test</div><h2>1 videos, one variable</h2>
+<section><div class="eyebrow">The test</div><h2>4 videos, one variable</h2>
 <p class="sub">Everything is identical except the first line. A is the original hook. Each goes to a different account; the views decide.</p>
-<div class="vars"><div class="var"><video src="fork_1794006800_music.mp4" controls playsinline loop preload="metadata"></video>
-<span class="tag ctl">A · CONTROL</span><h3>“the 20-min dinner keeping me in a deficit”</h3><p></p></div></div></section>
+<div class="vars"><div class="var"><video src="fork_1794006800_A.mp4#t=0.6" controls playsinline loop preload="auto"></video>
+<span class="tag ctl">A · CONTROL</span><h3>“a meal I could eat 5 days a week in a calorie deficit”</h3><p>control: the original&#x27;s hook, unchanged</p></div><div class="var"><video src="fork_1794006800_B.mp4#t=0.6" controls playsinline loop preload="auto"></video>
+<span class="tag ">B · TEST</span><h3>“500 calorie meal i eat 5 days a week”</h3><p>adds concrete caloric specificity, borrowing from the 31.9 views/follower winner that highlighted sub-500 calorie and macro numbers</p></div><div class="var"><video src="fork_1794006800_C.mp4#t=0.6" controls playsinline loop preload="auto"></video>
+<span class="tag ">C · TEST</span><h3>“lazy calorie deficit meal i eat every week”</h3><p>bets on low-effort positioning, inspired by the lazy girl meal format scoring 26.7 views/follower</p></div><div class="var"><video src="fork_1794006800_D.mp4#t=0.6" controls playsinline loop preload="auto"></video>
+<span class="tag ">D · TEST</span><h3>“volume eating meal i make 5 days a week”</h3><p>targets the volume eating concept, which led top-performing deficit content at 31.9 views/follower</p></div></div></section>
 
 <section><div class="eyebrow">What Oriane saw</div><h2>Winners in “calorie tracker”</h2>
 <p class="sub">Green bar = first 3 seconds of speech. Yellow ticks = text appearing on screen. Ranked by views per follower.</p>
