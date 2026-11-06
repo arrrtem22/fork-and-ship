@@ -12,3 +12,4 @@ data/fork_*/
 data/*.webp
 data/*.mp3
 .DS_Store
+data/cmp_*.jpg

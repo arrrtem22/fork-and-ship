@@ -1,10 +1,10 @@
 """Fork one winning video: keep its structure (shots, cut timing, text rhythm), change one thing, swap the ending for our CTA.
 
 Split, by screen time:
-  ~80% copy   every shot is re-shot by the video model from the original frame as reference (same framing, action,
+  ~90% copy   every shot is re-shot by the video model from the original frame as reference (same framing, action,
               light, cut length) with a new person/plate/kitchen, and the original's on-screen text kept almost word for word
-  ~10% test   one experiment: a new hook line on shot 1 (logged, so the views decide if it stays)
-  ~10% CTA    the last beat is our product, real app screen, in the creator's text style
+  ~5% test    the hook line on shot 1: N variants on the same footage (one is the original = control), so views compare
+  ~5% CTA     a short last beat is our product, real app screen, in the creator's text style
 We never reuse the creator's footage or face: the frames are only references.
 """
 from __future__ import annotations
@@ -39,15 +39,15 @@ Return ONE JSON object:
                                        would be false for us */ } ],
  "text_style": {"y": number /* 0-1, vertical centre of the creator's on-screen text */,
                 "size": "small" | "medium" | "large"},
- "experiment": {"what": "hook", "original": str, "variant": str /* a sharper first line, <= 9 words, same tone */,
-                "why": str},
+ "experiment": {"what": "hook", "original": str /* the original's first on-screen line */,
+                "variants": [ {"text": str /* <= 9 words, same tone */, "why": str /* the bet it tests */} ] /* exactly 3, each a different bet */},
  "cta": {"on_screen_text": str /* <= 10 words, in the creator's voice, names the product once, no hype */,
-         "seconds": 2.5},
+         "seconds": 1.2},
  "music_prompt": str /* instrumental bed in the spirit of the original's sound (title/author given), genre + mood + tempo */,
  "caption": str /* <= 140 chars, lowercase, close to the original's caption style */,
  "hashtags": [str] /* 3-5, no # */
 }
-Rules: 2 to 4 shots covering the original's first <= 12 seconds, cut where the picture changes between frames (OCR text may be noisy), each shot 1.5-5 s.
+Rules: 2 to 4 shots covering the original's full length (max 15 s), cut where the picture changes between frames (OCR text may be noisy), each shot 1.5-5 s.
 Each shot prompt must describe what its reference frame actually shows (subject, action, angle, props), so the
 re-shoot matches it; only the person, exact plate and room change. Copy the structure, not the person. The product appears only in the CTA."""
 

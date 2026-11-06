@@ -124,56 +124,76 @@ def pick_winner(winners: list[dict]) -> dict:
 
 
 def fork() -> str:
-    """Re-shoot a winner shot by shot (80%), test one hook (10%), end on our product (10%)."""
+    """Re-shoot a winner shot by shot (~90%), A/B the hook on the same footage (~5%), end on our product (~5%)."""
     winners = _load("research.json") or research()
     w = pick_winner(winners)
-    early = [fr for fr in w["frames"] if fr["t"] <= 12]
+    early = [fr for fr in w["frames"] if fr["t"] <= 15]
     refs = early[:: max(1, math.ceil(len(early) / 6))][:6]
     f = forker.plan_fork(w, CONFIG["product"], refs)
     shots = f["shots"][:4]
+    exp = f.get("experiment") or {}
+    hooks = [{"text": exp.get("original") or shots[0].get("on_screen_text", ""), "why": "control: the original's hook"}]
+    hooks += [v for v in exp.get("variants", []) if v.get("text")][:3]
     created = int(time.time())
     work = os.path.join(DATA, f"fork_{created}")
+    ts = f.get("text_style") or {}
+    text_y, text_size = float(ts.get("y", 0.4)), {"small": 50, "medium": 62, "large": 76}.get(ts.get("size"), 62)
     gen_shots = []
-    for i, s in enumerate(shots):
+    for s in shots:
         seg = max(1.5, float(s["end"]) - float(s["start"]))
-        text = f["experiment"]["variant"] if i == 0 and f.get("experiment") else s.get("on_screen_text", "")
-        ts = f.get("text_style") or {}
-        gen_shots.append({"prompt": s["prompt"], "seconds": seg, "on_screen_text": text,
-                          "text_y": float(ts.get("y", 0.4)), "text_size": {"small": 50, "medium": 62, "large": 76}.get(ts.get("size"), 62),
-                          "ref": forker.frame_at(w, float(s["start"]) + min(0.5, seg / 2)),
-                          "ref_clean": forker.clean_ref(forker.frame_obj(w, float(s["start"]) + min(0.5, seg / 2)))})
+        t_ref = float(s["start"]) + min(0.5, seg / 2)
+        gen_shots.append({"prompt": s["prompt"], "seconds": seg, "on_screen_text": s.get("on_screen_text", ""),
+                          "text_y": text_y, "text_size": text_size, "ref": forker.frame_at(w, t_ref),
+                          "ref_clean": forker.clean_ref(forker.frame_obj(w, t_ref))})
 
     def generate(prompt, seconds, ref=None):
         if os.environ.get("FORKSHIP_OFFLINE") or not os.environ.get("GMI_API_KEY"):
             return _generate(prompt, seconds)
-        rid = gmi.start_video(prompt + ". No text, captions or stickers in frame.", seconds=max(4, math.ceil(seconds)), reference_images=[ref] if ref else None)
+        rid = gmi.start_video(prompt + ". No text, captions or stickers in frame.", seconds=max(4, math.ceil(seconds)),
+                              reference_images=[ref] if ref else None)
         return gmi.wait_video(rid)
 
     live = os.environ.get("GMI_API_KEY") and not os.environ.get("FORKSHIP_OFFLINE")
     music_id = gmi.start_music(f.get("music_prompt") or "upbeat lofi cooking beat") if live else None
     clips = render.render_shots(gen_shots, work, lambda p, sec, _m={s["prompt"]: s["ref_clean"] for s in gen_shots}: generate(p, sec, _m.get(p)))
-    cta = f.get("cta") or {"on_screen_text": CONFIG["product"]["name"], "seconds": 2.5}
+    shot_s = sum(s["seconds"] for s in gen_shots)
+    cta = f.get("cta") or {"on_screen_text": CONFIG["product"]["name"]}
+    cta["seconds"] = round(max(1.2, shot_s * 0.05 / 0.95), 1)  # ~5% of screen time, but long enough to read
     stills = sorted(glob.glob(CONFIG.get("product_stills", "assets/product_*.jpg")))
-    clips.append(render.shot_clip(stills[0], cta["on_screen_text"], float(cta.get("seconds", 2.5)), os.path.join(work, "cta.mp4"), work,
-                                  y_frac=gen_shots[0]["text_y"], size=gen_shots[0]["text_size"]))
-    out = render.concat(clips, os.path.join(DATA, f"fork_{created}_silent.mp4"))
+    cta_clip = render.shot_clip(stills[0], cta["on_screen_text"], cta["seconds"], os.path.join(work, "cta.mp4"), work, y_frac=text_y, size=text_size)
+    mp3 = None
     if music_id:
-        total = sum(s["seconds"] for s in gen_shots) + float(cta.get("seconds", 2.5))
-        mp3 = os.path.join(work, "music.mp3")
-        urllib.request.urlretrieve(gmi.wait_audio(music_id), mp3)
-        out = render.add_music(out, mp3, os.path.join(DATA, f"fork_{created}.mp4"), total)
-    p = {"created_at": created, "chosen_format": f"fork of @{w['handle']} ({w['views'] // 1000}K views, {w['views_per_follower']}x followers)",
-         "why": f"{w['url']}: highest views per follower with a clear shot/text structure.",
+        try:
+            mp3 = os.path.join(work, "music.mp3")
+            urllib.request.urlretrieve(gmi.wait_audio(music_id), mp3)
+        except Exception as e:
+            print(f"fork: music failed ({e}); videos stay silent")
+            mp3 = None
+    raw0 = next((os.path.join(work, n) for n in ("raw_0.mp4",) if os.path.exists(os.path.join(work, n))), None)
+    variants = []
+    for k, h in enumerate(hooks):
+        first = render.shot_clip(raw0 or gen_shots[0]["ref"], h["text"], gen_shots[0]["seconds"], os.path.join(work, f"hook_{k}.mp4"), work,
+                                 y_frac=text_y, size=text_size) if raw0 else clips[0]
+        out = render.concat([first] + clips[1:] + [cta_clip], os.path.join(work, f"v{k}_silent.mp4"))
+        final = os.path.join(DATA, f"fork_{created}_{'ABCD'[k]}.mp4")
+        if mp3:
+            render.add_music(out, mp3, final, shot_s + cta["seconds"])
+        else:
+            os.replace(out, final)
+        variants.append({"label": "ABCD"[k], "hook": h["text"], "why": h.get("why", ""), "video": final})
+    p = {"created_at": created, "chosen_format": f"fork of @{w['handle']}",
+         "why": f"{w['url']}: highest views per follower with a clear shot structure.",
          "source": {k: w[k] for k in ("url", "handle", "views", "followers", "views_per_follower", "duration_s")},
-         "experiment": f.get("experiment"), "cta": cta, "music_prompt": f.get("music_prompt"),
-         "formats": [], "remake": {"hook_text": gen_shots[0]["on_screen_text"],
+         "split": {"copy_s": round(shot_s, 1), "test": "hook line", "cta_s": cta["seconds"]},
+         "experiment": exp, "variants": variants, "cta": cta, "music_prompt": f.get("music_prompt"),
+         "formats": [], "remake": {"hook_text": hooks[0]["text"],
                                    "shots": [{"seconds": round(s["seconds"], 1), "prompt": s["prompt"], "on_screen_text": s["on_screen_text"],
                                               "ref": s["ref"]} for s in gen_shots],
                                    "caption": f.get("caption", ""), "hashtags": ([t.lstrip("#") for t in f.get("hashtags", [])] + CONFIG.get("always_hashtags", []))[:5]},
-         "video": out}
+         "video": variants[0]["video"]}
     _save("plan.json", p)
-    print(f"fork: {out} from {w['url']}")
-    return out
+    print(f"fork: {len(variants)} variants from {w['url']}: " + ", ".join(v["video"] for v in variants))
+    return p["video"]
 
 
 def music() -> str:
