@@ -159,7 +159,7 @@ def build() -> str:
 <p class="lead">Find the video that is winning in your niche this week. Re-shoot it shot by shot for your product, test one hook, post it. The views pick the next one.</p>
 <div class="chips"><span class="chip">Oriane video intelligence</span><span class="chip">GMI · Gemini 3.8 Flash</span><span class="chip">GMI · Seedance 2.0</span><span class="chip">GMI · MiniMax Music</span><span class="chip">Outnumber API</span></div>
 <div class="stats">
- <div class="stat"><b>{len(winners)}</b><span>niche videos read by Oriane</span></div>
+ <div class="stat"><b>{len(winners)}</b><span>niche videos ranked by Oriane</span></div>
  <div class="stat"><b>{src.get('views_per_follower', '–')}x</b><span>views per follower on the one we forked</span></div>
  <div class="stat"><b>{len(shots)} shots</b><span>re-shot from the original's frames</span></div>
  <div class="stat"><b>{len(gallery)} forks</b><span>of different winning videos</span></div>
@@ -171,7 +171,7 @@ def build() -> str:
  <div class="step"><i>02 · ORIANE</i><p>Read each second</p><small>spoken words, on-screen text + boxes, sound, cuts</small></div>
  <div class="step"><i>03 · GMI LLM</i><p>Plan the fork from the frames</p><small>shot list, text, 3 hook bets, CTA, music brief</small></div>
  <div class="step"><i>04 · GMI VIDEO</i><p>Re-shoot every shot</p><small>original frame as reference, its text blurred out</small></div>
- <div class="step"><i>05 · OUTNUMBER</i><p>Post A/B/C/D, read views</p><small>the winning hook becomes the next control</small></div>
+ <div class="step"><i>05 · OUTNUMBER</i><p>Queue it, read views</p><small>next: views pick the default hook</small></div>
 </div></section>
 
 <section><div class="eyebrow">The fork</div><h2>Original vs ours, shot by shot</h2>
@@ -181,7 +181,7 @@ def build() -> str:
 <div class="pairs" style="margin-top:18px">{''.join(pairs)}</div></section>
 
 <section><div class="eyebrow">More forks</div><h2>{len(gallery)} winners, {len(gallery)} forks</h2>
-<p class="sub">Same command on different source videos Oriane ranked. Each fork keeps the original's shots and timing, tests one hook line, and ends on the app.</p>
+<p class="sub">Same command on different source videos Oriane ranked. Each fork re-shoots the original's first shots (up to 15 s) with the same framing and timing, tests one hook line, and ends on the app.</p>
 <div class="vars g2">{vars_html}</div></section>
 
 <section><div class="eyebrow">What Oriane saw</div><h2>Winners in “{E(cfg['niche_phrases'][0])}”</h2>
