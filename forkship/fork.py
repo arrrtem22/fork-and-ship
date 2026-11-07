@@ -32,7 +32,7 @@ FORK_SYSTEM = """You fork a winning short video for another product. You get the
 API (on-screen text with timestamps, spoken words, length) and its frames as images, in order.
 Return ONE JSON object:
 {
- "shots": [ {"start": s, "end": s,
+ "shots": [ {"start": s, "end": s, "has_face": bool /* true if a person's face is visible in this shot's frame */,
              "prompt": str /* re-shoot THIS frame: same framing, camera angle, action, light, colours; a different person
                               (or hands only), different plate and kitchen; vertical phone footage; no text in frame */,
              "on_screen_text": str /* the original's text at this time, kept ~80% word for word; adapt only words that

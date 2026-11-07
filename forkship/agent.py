@@ -144,7 +144,8 @@ def fork() -> str:
         t_ref = float(s["start"]) + min(0.5, seg / 2)
         gen_shots.append({"prompt": s["prompt"], "seconds": seg, "on_screen_text": s.get("on_screen_text", ""),
                           "text_y": text_y, "text_size": text_size, "ref": forker.frame_at(w, t_ref),
-                          "ref_clean": forker.clean_ref(forker.frame_obj(w, t_ref))})
+                          # A face in the reference makes the model clone that real person: describe the shot, send no image.
+                          "ref_clean": None if s.get("has_face") else forker.clean_ref(forker.frame_obj(w, t_ref))})
 
     def generate(prompt, seconds, ref=None):
         if os.environ.get("FORKSHIP_OFFLINE") or not os.environ.get("GMI_API_KEY"):

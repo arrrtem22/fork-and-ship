@@ -15,3 +15,6 @@ data/*.mp3
 data/cmp_*.jpg
 fork-and-ship-demo/
 .vercel/
+data2/
+product2.json
+data_*/

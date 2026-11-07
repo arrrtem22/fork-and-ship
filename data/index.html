@@ -24,7 +24,8 @@ section{margin-top:64px}.sub{color:var(--mut);margin:0 0 22px}
 .pair img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:10px;display:block;background:#1d1d22}
 .pair .lab{font:600 11px ui-monospace,Menlo,monospace;color:var(--mut);margin:8px 2px 6px;letter-spacing:.08em}
 .pair .cap{font-size:12px;color:#c9c9d1;margin:8px 2px 2px}
-.vars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.vars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.vars.g2{grid-template-columns:repeat(2,1fr)}
+.gpair{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gpair img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block;background:#1d1d22}
 .var{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px}
 .var video{width:100%;aspect-ratio:9/16;border-radius:12px;background:#000;display:block}
 .tag{display:inline-block;font:700 11px ui-monospace,Menlo,monospace;border-radius:6px;padding:3px 7px;margin:12px 0 6px;color:#0a0a0c;background:var(--show)}
@@ -49,7 +50,7 @@ a.src{color:var(--acc)}footer{margin-top:72px;color:var(--mut);font-size:13px;bo
  <div class="stat"><b>30</b><span>niche videos read by Oriane</span></div>
  <div class="stat"><b>24.1x</b><span>views per follower on the one we forked</span></div>
  <div class="stat"><b>3 shots</b><span>re-shot from the original's frames</span></div>
- <div class="stat"><b>4 hooks</b><span>same footage, so views compare fairly</span></div>
+ <div class="stat"><b>4 forks</b><span>of different winning videos</span></div>
 </div>
 
 <section><div class="eyebrow">How it works</div><h2>One command, five steps</h2><p class="sub">python -m forkship.agent fork</p>
@@ -75,13 +76,21 @@ a.src{color:var(--acc)}footer{margin-top:72px;color:var(--mut);font-size:13px;bo
 <div style="aspect-ratio:9/16;border-radius:10px;border:1px dashed var(--line);display:grid;place-items:center;color:var(--mut);font-size:12px">their ending</div>
 <div class="cap">original</div><img src="cmp_cta.jpg" style="margin-top:8px"><div class="cap">ours · “track your deficit meals in seconds with paku”</div></div></div></section>
 
-<section><div class="eyebrow">The test</div><h2>4 videos, one variable</h2>
-<p class="sub">Everything is identical except the first line. A is the original hook. Each goes to a different account; the views decide.</p>
-<div class="vars"><div class="var"><video src="fork_1794006800_A.mp4#t=0.6" controls playsinline loop preload="auto"></video>
-<span class="tag ctl">A · CONTROL</span><h3>“a meal I could eat 5 days a week in a calorie deficit”</h3><p>control: the original&#x27;s hook, unchanged</p></div><div class="var"><video src="fork_1794006800_B.mp4#t=0.6" controls playsinline loop preload="auto"></video>
-<span class="tag ">B · TEST</span><h3>“500 calorie meal i eat 5 days a week”</h3><p>adds concrete caloric specificity, borrowing from the 31.9 views/follower winner that highlighted sub-500 calorie and macro numbers</p></div><div class="var"><video src="fork_1794006800_C.mp4#t=0.6" controls playsinline loop preload="auto"></video>
-<span class="tag ">C · TEST</span><h3>“lazy calorie deficit meal i eat every week”</h3><p>bets on low-effort positioning, inspired by the lazy girl meal format scoring 26.7 views/follower</p></div><div class="var"><video src="fork_1794006800_D.mp4#t=0.6" controls playsinline loop preload="auto"></video>
-<span class="tag ">D · TEST</span><h3>“volume eating meal i make 5 days a week”</h3><p>targets the volume eating concept, which led top-performing deficit content at 31.9 views/follower</p></div></div></section>
+<section><div class="eyebrow">More forks</div><h2>4 winners, 4 forks</h2>
+<p class="sub">Same command on different source videos Oriane ranked. Each fork keeps the original's shots and timing, tests one hook line, and ends on the app.</p>
+<div class="vars g2"><div class="var"><div class="gpair"><div><img src="https://social-catalog-static.oriane.xyz/oriane-contents/tiktok/7680595014258298142/thumbnail.webp"><div class="cap">original</div></div>
+<div><video src="gallery_0.mp4#t=0.6" controls playsinline loop preload="auto"></video><div class="cap">our fork</div></div></div>
+<span class="tag">@rachelscookin</span><h3>641K views · 24.1x followers</h3>
+<p>hook: "500 calorie meal i eat 5 days a week"</p><p><a class="src" href="https://www.tiktok.com/@rachelscookin/video/7680595014258298142" target="_blank">source</a> · 7s original</p></div><div class="var"><div class="gpair"><div><img src="https://social-catalog-static.oriane.xyz/oriane-contents/tiktok/7685456112178515208/thumbnail.webp"><div class="cap">original</div></div>
+<div><video src="gallery_1.mp4#t=0.6" controls playsinline loop preload="auto"></video><div class="cap">our fork</div></div></div>
+<span class="tag">@amateurprochef</span><h3>20.9M views · 267.3x followers</h3>
+<p>hook: "how to stay in a deficit eating real food"</p><p><a class="src" href="https://www.tiktok.com/@amateurprochef/video/7685456112178515208" target="_blank">source</a> · 32s original</p></div><div class="var"><div class="gpair"><div><img src="https://social-catalog-static.oriane.xyz/oriane-contents/tiktok/7692838839009709319/thumbnail.webp"><div class="cap">original</div></div>
+<div><video src="gallery_2.mp4#t=0.6" controls playsinline loop preload="auto"></video><div class="cap">our fork</div></div></div>
+<span class="tag">@johns.workout</span><h3>522K views · 20.7x followers</h3>
+<p>hook: "POV: this calorie deficit routine melted stomach fat"</p><p><a class="src" href="https://www.tiktok.com/@johns.workout/video/7692838839009709319" target="_blank">source</a> · 10s original</p></div><div class="var"><div class="gpair"><div><img src="https://social-catalog-static.oriane.xyz/oriane-contents/tiktok/7673067889313844502/thumbnail.webp"><div class="cap">original</div></div>
+<div><video src="gallery_3.mp4#t=0.6" controls playsinline loop preload="auto"></video><div class="cap">our fork</div></div></div>
+<span class="tag">@amymumof3_</span><h3>561K views · 27.3x followers</h3>
+<p>hook: "realistic calorie deficit meals without obsessing"</p><p><a class="src" href="https://www.tiktok.com/@amymumof3_/video/7673067889313844502" target="_blank">source</a> · 62s original</p></div></div></section>
 
 <section><div class="eyebrow">What Oriane saw</div><h2>Winners in “calorie tracker”</h2>
 <p class="sub">Green bar = first 3 seconds of speech. Yellow ticks = text appearing on screen. Ranked by views per follower.</p>

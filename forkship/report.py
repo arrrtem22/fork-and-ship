@@ -1,9 +1,11 @@
 """One static page for the demo: what Oriane saw, the original next to our fork shot by shot, the 4 hook variants."""
 from __future__ import annotations
 
+import glob
 import html
 import json
 import os
+import shutil
 import subprocess
 
 DATA = os.environ.get("FORKSHIP_DATA", "data")
@@ -60,7 +62,8 @@ section{margin-top:64px}.sub{color:var(--mut);margin:0 0 22px}
 .pair img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:10px;display:block;background:#1d1d22}
 .pair .lab{font:600 11px ui-monospace,Menlo,monospace;color:var(--mut);margin:8px 2px 6px;letter-spacing:.08em}
 .pair .cap{font-size:12px;color:#c9c9d1;margin:8px 2px 2px}
-.vars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.vars{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.vars.g2{grid-template-columns:repeat(2,1fr)}
+.gpair{display:grid;grid-template-columns:1fr 1fr;gap:8px}.gpair img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:12px;display:block;background:#1d1d22}
 .var{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:12px}
 .var video{width:100%;aspect-ratio:9/16;border-radius:12px;background:#000;display:block}
 .tag{display:inline-block;font:700 11px ui-monospace,Menlo,monospace;border-radius:6px;padding:3px 7px;margin:12px 0 6px;color:#0a0a0c;background:var(--show)}
@@ -112,9 +115,29 @@ def build() -> str:
            f'<span style="background:var(--show);border-radius:4px;padding:2px 6px;margin-left:10px">test: only the first text line</span></div>'
            f'<div style="flex:{cta_s};background:var(--acc)">CTA {100 * cta_s / total:.0f}%</div></div>')
 
-    vars_html = "".join(f"""<div class="var"><video src="{os.path.basename(v['video'])}#t=0.6" controls playsinline loop preload="auto"></video>
-<span class="tag {'ctl' if i == 0 else ''}">{v['label']} · {'CONTROL' if i == 0 else 'TEST'}</span><h3>“{E(v['hook'])}”</h3><p>{E(v.get('why', ''))}</p></div>"""
-                        for i, v in enumerate(variants))
+    # Gallery: one fork per source video (data/ plus any other fork folders), the tested-hook cut of each.
+    thumbs = {w["url"]: w.get("thumbnail") for w in winners}
+    gallery = []
+    for d in [DATA] + sorted(x for x in glob.glob("data2") + glob.glob("data_*") if os.path.isdir(x)):
+        gp = os.path.join(d, "plan.json")
+        if not os.path.exists(gp):
+            continue
+        g = json.load(open(gp))
+        if g.get("hidden"):
+            continue
+        vs = g.get("variants") or []
+        if not vs or not os.path.exists(vs[min(1, len(vs) - 1)]["video"]):
+            continue
+        v = vs[min(1, len(vs) - 1)]
+        name = f"gallery_{len(gallery)}.mp4"
+        if os.path.abspath(v["video"]) != os.path.abspath(os.path.join(DATA, name)):
+            shutil.copyfile(v["video"], os.path.join(DATA, name))
+        gs = g.get("source") or {}
+        gallery.append(f"""<div class="var"><div class="gpair"><div><img src="{thumbs.get(gs.get('url')) or ''}"><div class="cap">original</div></div>
+<div><video src="{name}#t=0.6" controls playsinline loop preload="auto"></video><div class="cap">our fork</div></div></div>
+<span class="tag">@{E(gs.get('handle', ''))}</span><h3>{_fmt(gs.get('views'))} views · {gs.get('views_per_follower')}x followers</h3>
+<p>hook: "{E(v['hook'])}"</p><p><a class="src" href="{gs.get('url', '#')}" target="_blank">source</a> · {gs.get('duration_s')}s original</p></div>""")
+    vars_html = "".join(gallery)
 
     cards = []
     for w in winners[:8]:
@@ -136,7 +159,7 @@ def build() -> str:
  <div class="stat"><b>{len(winners)}</b><span>niche videos read by Oriane</span></div>
  <div class="stat"><b>{src.get('views_per_follower', '–')}x</b><span>views per follower on the one we forked</span></div>
  <div class="stat"><b>{len(shots)} shots</b><span>re-shot from the original's frames</span></div>
- <div class="stat"><b>{len(variants)} hooks</b><span>same footage, so views compare fairly</span></div>
+ <div class="stat"><b>{len(gallery)} forks</b><span>of different winning videos</span></div>
 </div>
 
 <section><div class="eyebrow">How it works</div><h2>One command, five steps</h2><p class="sub">python -m forkship.agent fork</p>
@@ -154,9 +177,9 @@ def build() -> str:
 <div class="legend"><span>copied: shots, framing, cut timing, on-screen text</span><span>tested: one line of text</span><span>CTA: real app screen, {cta.get('seconds')}s (shortest readable)</span></div>
 <div class="pairs" style="margin-top:18px">{''.join(pairs)}</div></section>
 
-<section><div class="eyebrow">The test</div><h2>{len(variants)} videos, one variable</h2>
-<p class="sub">Everything is identical except the first line. A is the original hook. Each goes to a different account; the views decide.</p>
-<div class="vars">{vars_html}</div></section>
+<section><div class="eyebrow">More forks</div><h2>{len(gallery)} winners, {len(gallery)} forks</h2>
+<p class="sub">Same command on different source videos Oriane ranked. Each fork keeps the original's shots and timing, tests one hook line, and ends on the app.</p>
+<div class="vars g2">{vars_html}</div></section>
 
 <section><div class="eyebrow">What Oriane saw</div><h2>Winners in “{E(cfg['niche_phrases'][0])}”</h2>
 <p class="sub">Green bar = first 3 seconds of speech. Yellow ticks = text appearing on screen. Ranked by views per follower.</p>
